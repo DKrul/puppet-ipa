@@ -44,6 +44,7 @@ class ipa::server(
 	$email_domain = '',		# defaults to domain
 	$shell = true,			# defaults to /bin/sh
 	$homes = true,			# defaults to /home
+	$mkhomedir = true,		# creates the home dir when an ipa user logs on
 
 	# packages products to install ?
 	$ntp = false,			# opposite of ipa-server-install default
@@ -509,6 +510,11 @@ class ipa::server(
 		},
 	}
 
+	$args13 = $mkhomedir ? {
+		true => '--mkhomedir',
+		default => '',
+	}
+
 	$arglist = [
 		"${args01}",
 		"${args02}",
@@ -522,6 +528,7 @@ class ipa::server(
 		"${args10}",
 		"${args11}",
 		"${args12}",
+		"${args13}",
 	]
 	#$args = inline_template('<%= arglist.delete_if {|x| x.empty? }.join(" ") %>')
 	$args = join(delete($arglist, ''), ' ')
