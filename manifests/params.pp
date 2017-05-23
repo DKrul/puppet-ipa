@@ -22,7 +22,7 @@ class ipa::params(
 	$package_ipa_admintools = 'ipa-admintools',
 	$package_pwgen = 'pwgen',
 	$package_bind = ['ipa-server-dns'],
-	$package_python_argparse = 'python-argparse',
+	$package_python_argparse = 'python-libs',
 
 	# programs...
 	$program_ipa_server_install = '/usr/sbin/ipa-server-install',
