@@ -24,20 +24,21 @@ Puppet::Type.type(:ipa_usergroup).provide :ipa_group do
       end
     else
       debug 'Creating User Group record %s' % resource[:name]
-      params = ''
+      params = Arary.new
       if resource[:posix].to_s.eql?('false') ? true : false
-        params += ' --nonposix'
+        params.push('--nonposix')
       end
       if resource[:external].to_s.eql?('true') ? true : false
-        params += ' --external'
+        params.push('--external')
       end
       if resource[:gid] != 0
-        params += ' --gid=%d' % resource[:gid]
+        params.push('--gid')
+        params.push(resource[:gid])
       end
-      if params == ''
+      if params == []
         ipa "group-add", resource[:name], "--desc", resource[:description]
       else
-        ipa "group-add", resource[:name], "--desc", resource[:description], params
+        ipa "group-add", resource[:name], "--desc", resource[:description], params.join(' ')
       end
     end
   end
