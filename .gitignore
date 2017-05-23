@@ -5,3 +5,4 @@ hacking/
 .pmtignore
 puppet-ipa-documentation.pdf
 .DS_store
+*.swp
