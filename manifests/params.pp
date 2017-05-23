@@ -21,7 +21,7 @@ class ipa::params(
 	$package_ipa_client = 'ipa-client',
 	$package_ipa_admintools = 'ipa-admintools',
 	$package_pwgen = 'pwgen',
-	$package_bind = ['bind', 'bind-dyndb-ldap'],
+	$package_bind = ['ipa-server-dns'],
 	$package_python_argparse = 'python-argparse',
 
 	# programs...
