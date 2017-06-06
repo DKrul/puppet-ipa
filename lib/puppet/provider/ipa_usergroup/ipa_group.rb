@@ -24,7 +24,7 @@ Puppet::Type.type(:ipa_usergroup).provide :ipa_group do
       end
     else
       debug 'Creating User Group record %s' % resource[:name]
-      params = Arary.new
+      params = Array.new
       if resource[:posix].to_s.eql?('false') ? true : false
         params.push('--nonposix')
       end
