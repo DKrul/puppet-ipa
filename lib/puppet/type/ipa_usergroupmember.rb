@@ -1,7 +1,15 @@
 Puppet::Type.newtype(:ipa_usergroupmember) do
   desc "Manage IPA User Group member records"
 
-  ensurable
+  ensurable do
+    newvalue(:present) do
+      provider.create
+    end
+    newvalue(:absent) do
+      provider.destroy
+    end
+    defaultto :present
+  end
 
   newparam(:member) do
     desc "Member to add to a group"

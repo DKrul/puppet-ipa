@@ -1,7 +1,15 @@
 Puppet::Type.newtype(:ipa_forwardzonerecord) do
   desc "Manage IPA DNS forwardzone records"
 
-  ensurable
+  ensurable do
+    newvalue(:present) do
+      provider.create
+    end
+    newvalue(:absent) do
+      provider.destroy
+    end
+    defaultto :present
+  end
 
   newparam(:zonename) do
     desc "The forwardzone name to be created"

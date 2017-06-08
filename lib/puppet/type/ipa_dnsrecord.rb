@@ -1,7 +1,15 @@
 Puppet::Type.newtype(:ipa_dnsrecord) do
   desc "Manage IPA DNS records"
 
-  ensurable
+  ensurable do
+    newvalue(:present) do
+      provider.create
+    end
+    newvalue(:absent) do
+      provider.destroy
+    end
+    defaultto :present
+  end
 
   newparam(:record) do
     desc "The record name to be created"

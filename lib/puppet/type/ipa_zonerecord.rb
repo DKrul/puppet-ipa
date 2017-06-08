@@ -1,7 +1,15 @@
 Puppet::Type.newtype(:ipa_zonerecord) do
   desc "Manage IPA DNS zone records"
 
-  ensurable
+  ensurable do
+    newvalue(:present) do
+      provider.create
+    end
+    newvalue(:absent) do
+      provider.destroy
+    end
+    defaultto :present
+  end
 
   newparam(:zonename) do
     desc "The zone name to be created"
