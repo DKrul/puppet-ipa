@@ -33,7 +33,8 @@ class ipa::client(
 	$zone = 'net',
 	$allow = 'all',
 	$debug = false,
-	$ensure = present		# TODO: support uninstall with 'absent'
+	$ensure = present,		# TODO: support uninstall with 'absent'
+	$version = $::ipa::params::package_ipa_version	
 ) {
 	include ipa::params
 	include ipa::vardir
@@ -74,13 +75,13 @@ class ipa::client(
 	}
 
 	package { "${::ipa::params::package_ipa_client}":
-		ensure => present,
+		ensure => $version,
 	}
 
 	# an administrator machine requires the ipa-admintools package as well:
 	package { "${::ipa::params::package_ipa_admintools}":
 		ensure => $admin ? {
-			true => present,
+			true => $version,
 			false => absent,
 		},
 		require => Package["${::ipa::params::package_ipa_client}"],

@@ -17,6 +17,7 @@
 
 class ipa::params(
 	# packages...
+	$package_ipa_version = latest,
 	$package_ipa_server = 'ipa-server',
 	$package_ipa_client = 'ipa-client',
 	$package_ipa_admintools = 'ipa-admintools',

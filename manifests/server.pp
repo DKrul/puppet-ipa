@@ -70,7 +70,8 @@ class ipa::server(
 	$service_excludes = [],		# never purge these service excludes...
 	$user_excludes = [],		# never purge these user excludes...
 	$peer_excludes = [],		# never purge these peer excludes...
-	$ensure = present		# TODO: support uninstall with 'absent'
+	$ensure = present,		# TODO: support uninstall with 'absent'
+	$version = $::ipa::params::package_ipa_version
 ) {
 	$fw = '$FW'			# make using $FW in shorewall easier...
 
@@ -199,7 +200,7 @@ class ipa::server(
 
 	if $dns {
 		package { $::ipa::params::package_bind:
-			ensure => present,
+			ensure => $version,
 			before => Package["${::ipa::params::package_ipa_server}"],
 		}
 	}
@@ -221,7 +222,7 @@ class ipa::server(
 	}
 
 	package { "${::ipa::params::package_ipa_server}":
-		ensure => present,
+		ensure => $version,
 	}
 
 	file { "${vardir}/diff.py":		# used by a few child classes
