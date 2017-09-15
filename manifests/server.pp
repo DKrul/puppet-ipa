@@ -70,7 +70,9 @@ class ipa::server(
 	$service_excludes = [],		# never purge these service excludes...
 	$user_excludes = [],		# never purge these user excludes...
 	$peer_excludes = [],		# never purge these peer excludes...
-	$ensure = present,		# TODO: support uninstall with 'absent'
+	$ensure = present,		# TODO: support uninstall with 'absent',
+  $users = undef,
+  $usergroups = undef,
 	$version = $::ipa::params::package_ipa_version
 ) {
 	$fw = '$FW'			# make using $FW in shorewall easier...
@@ -749,6 +751,15 @@ class ipa::server(
 			}
 		}
 	}
+  else
+  {
+    if $usergroups != undef {
+      create_resources('::ipa::usergroup', $usergroups)
+    }
+    if $users != undef {
+      create_resources('::ipa::user', $users)
+    }
+  }
 }
 
 # vim: ts=8
