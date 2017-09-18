@@ -20,7 +20,12 @@ Puppet::Type.type(:ipa_dnsrecord).provide :ipa_dns do
 
   def destroy
     debug 'Removing DNS record %s' % resource[:name]
-    ipa "dnsrecord-del", resource[:zone], resource[:record], "--a-rec", resource[:ipaddress]
+    ipa "dnsrecord-del", resource[:zone], resource[:record], "--del-all"
+    if resource[:create_reverse].to_s.eql?('true') ? true : false
+      ip_array = resource[:ipaddress].split('.')
+      ip_reverse_zone = ip_array[0..2].reverse.join('.') + '.in-addr.arpa'
+      ipa "dnsrecord-del", ip_reverse_zone, ip_array.last, "--del-all"
+    end
   end
 
   def exists?

@@ -11,10 +11,13 @@ Puppet::Type.newtype(:ipa_dnsrecord) do
     defaultto :present
   end
 
+  newparam(:name) do
+    desc "Name of the resource"
+    isnamevar
+  end
+
   newparam(:record) do
     desc "The record name to be created"
-
-    isnamevar
   end
 
   newparam(:zone) do
