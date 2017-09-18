@@ -1,5 +1,5 @@
-Puppet::Type.newtype(:ipa_sudoruleoption) do
-  desc "Manage IPA SUDOrule options"
+Puppet::Type.newtype(:ipa_sudorulehostgroup) do
+  desc "Manage IPA SUDOrule hostgroups"
 
   ensurable do
     newvalue(:present) do
@@ -16,12 +16,12 @@ Puppet::Type.newtype(:ipa_sudoruleoption) do
     isnamevar
   end
 
-  newparam(:option) do
-    desc "The option to add to the SUDOrule"
+  newparam(:hostgroup) do
+    desc "The hostgroup to add to the SUDOrule"
   end
 
   newparam(:sudorule) do
-    desc "The SUDOrule to add the option to"
+    desc "The SUDOrule to add the hostgroup to"
     defaultto ''
   end
 

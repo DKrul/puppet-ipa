@@ -71,11 +71,12 @@ class ipa::server(
 	$user_excludes = [],		# never purge these user excludes...
 	$peer_excludes = [],		# never purge these peer excludes...
 	$ensure = present,		# TODO: support uninstall with 'absent',
+  $version = $::ipa::params::package_ipa_version,
   $users = undef,
   $usergroups = undef,
   $dnszones = undef,
   $dnsrecords = undef,
-	$version = $::ipa::params::package_ipa_version
+  $sudorules = undef,
 ) {
 	$fw = '$FW'			# make using $FW in shorewall easier...
 
@@ -766,6 +767,9 @@ class ipa::server(
     }
     if $dnsrecords != undef {
       create_resources('::ipa::dnsrecord', $dnsrecords)
+    }
+    if $sudorules != undef {
+      create_resources('::ipa::sudorule', $sudorules)
     }
   }
 }
