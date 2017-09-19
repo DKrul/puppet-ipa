@@ -11,10 +11,13 @@ Puppet::Type.newtype(:ipa_hostgroupmember) do
     defaultto :present
   end
 
+  newparam(:name) do
+    desc "Name of resource"
+    isnamevar
+  end
+
   newparam(:member) do
     desc "Member to add to a hostgroup"
-
-    isnamevar
   end
 
   newparam(:groupname) do

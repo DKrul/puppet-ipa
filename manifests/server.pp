@@ -74,6 +74,7 @@ class ipa::server(
   $version = $::ipa::params::package_ipa_version,
   $users = undef,
   $usergroups = undef,
+  $hostgroups = undef,
   $dnszones = undef,
   $dnsrecords = undef,
   $sudorules = undef,
@@ -763,17 +764,20 @@ class ipa::server(
     if $users != undef {
       create_resources('::ipa::user', $users)
     }
+    if $hostgroups != undef {
+      create_resources('::ipa::hostgroup', $hostgroups)
+    }
     if $dnszones != undef {
       create_resources('::ipa::dnszone', $dnszones)
     }
     if $dnsrecords != undef {
       create_resources('::ipa::dnsrecord', $dnsrecords)
     }
-    if $sudorules != undef {
-      create_resources('::ipa::sudorule', $sudorules)
-    }
     if $sudocmdgroups != undef {
       create_resources('::ipa::sudocmdgroup', $sudocmdgroups)
+    }
+    if $sudorules != undef {
+      create_resources('::ipa::sudorule', $sudorules)
     }
   }
 }
