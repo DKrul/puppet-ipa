@@ -16,8 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class ipa::vardir {	# module vardir snippet
-	if "${::puppet_vardirtmp}" == '' {
-		if "${::puppet_vardir}" == '' {
+	if !defined('$::puppet_vardirtmp') {
+		if !defined('$::puppet_vardir') {
 			# here, we require that the puppetlabs fact exist!
 			fail('Fact: $puppet_vardir is missing!')
 		}
