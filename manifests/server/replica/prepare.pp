@@ -33,13 +33,13 @@ define ipa::server::replica::prepare(
 	$valid_file = "${vardir}/replica/prepare/${filename}"
 
 	# TODO: ipa-replica-prepare should allow you to pick output path/file
-	exec { "/usr/sbin/ipa-replica-prepare --password=`/bin/cat '${vardir}/dm.password'` ${valid_fqdn} && /bin/mv -f '${prepared}' '${valid_file}'":
-		logoutput => on_failure,
-		creates => "${valid_file}",
-		onlyif => "${::ipa::common::ipa_installed}",
+	exec { "ipa-replica-prepare-${name}":
+    command   => "/usr/sbin/ipa-replica-prepare --password=`/bin/cat '${vardir}/dm.password'` ${valid_fqdn} && /bin/mv -f '${prepared}' '${valid_file}'",
+    logoutput => on_failure,
+    creates   => "${valid_file}",
+    onlyif    => "${::ipa::common::ipa_installed}",
 		# ipa-server-install or ipa-replica-install must execute first!
-		require => Exec['ipa-install'],	# same alias for either install
-		alias => "ipa-replica-prepare-${name}",
+    require   => Exec['ipa-install'],	# same alias for either install
 	}
 
 	# tag this file so it doesn't get purged

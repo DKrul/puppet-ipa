@@ -475,7 +475,7 @@ define ipa::server::user(	# $login or principal as a unique id
 	}
 
 	# NOTE: this runs when no user is present...
-	exec { "ipa-server-user-add-${name}":	# alias
+	exec { "ipa-server-user-add-${name}":
 		# this has to be here because the command string gets too long
 		# for a puppet $name var and strange things start to happen...
 		command => "/usr/bin/ipa user-add '${valid_login}' ${aargs}",
@@ -509,7 +509,6 @@ define ipa::server::user(	# $login or principal as a unique id
 				# this user-add exec pulls in manager $requires
 				Exec["ipa-server-user-add-${name}"],
 			],
-			#alias => "ipa-server-user-mod-${name}",
 		}
 	}
 
@@ -539,7 +538,6 @@ define ipa::server::user(	# $login or principal as a unique id
 				Exec["ipa-server-user-add-${name}"],
 				#Exec["ipa-server-user-mod-${name}"],	# not needed...
 			],
-			#alias => "ipa-server-user-qmod-${name}",
 		}
 	}
 }

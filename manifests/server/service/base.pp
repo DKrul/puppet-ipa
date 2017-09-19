@@ -84,14 +84,14 @@ class ipa::server::service::base {
 	}
 
 	# run the cleanup
-	exec { "${vardir}/clean-services.sh":
-		logoutput => on_failure,
-		refreshonly => true,
-		require => [
+	exec { 'ipa-clean-services':
+    command     => "${vardir}/clean-services.sh",
+    logoutput   => on_failure,
+    refreshonly => true,
+    require     => [
 			Exec['ipa-server-kinit'],
 			File["${vardir}/clean-services.sh"],
 		],
-		alias => 'ipa-clean-services',
 	}
 }
 

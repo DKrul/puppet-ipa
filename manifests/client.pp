@@ -143,15 +143,15 @@ class ipa::client(
 	}
 	$onlyif = "/usr/bin/test '${has_auth}' = 'true'"
 	$unless = "/usr/bin/python -c 'import sys,ipapython.sysrestore; sys.exit(0 if ipapython.sysrestore.FileStore(\"/var/lib/ipa-client/sysrestore\").has_files() else 1)'"
-	exec { "/usr/sbin/ipa-client-install ${args} --unattended":
-		logoutput => on_failure,
-		onlyif => "${onlyif}",	# needs a password or authentication...
-		unless => "${unless}",	# can't install if already installed...
-		require => [
+	exec { 'ipa-install':
+    command   => "/usr/sbin/ipa-client-install ${args} --unattended",
+    logoutput => on_failure,
+    onlyif    => "${onlyif}",	# needs a password or authentication...
+    unless    => "${unless}",	# can't install if already installed...
+    require   => [
 			Package["${::ipa::params::package_ipa_client}"],
 			File["${vardir}/password"],
 		],
-		alias => 'ipa-install',	# same alias as server to prevent both!
 	}
 
 	# this file is a tag that lets nfs know that the ipa host is now ready!

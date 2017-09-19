@@ -142,21 +142,21 @@ define ipa::client::service(
 	$rr = "krbtgt/${valid_realm}@${valid_realm}"
 	$tl = '900'	# 60*15 => 15 minutes
 	$admin = "host/${valid_fqdn}@${valid_realm}"	# use this principal...
-	exec { "/usr/bin/kinit -k -t '${valid_keytab}' ${admin} -l 1h":
-		logoutput => on_failure,
-		#unless => "/usr/bin/klist -s",	# is there a credential cache
+	exec { "ipa-client-service-kinit-${name}":
+    command   => "/usr/bin/kinit -k -t '${valid_keytab}' ${admin} -l 1h",
+    logoutput => on_failure,
+    #unless   => "/usr/bin/klist -s",	# is there a credential cache
 		# NOTE: we need to check if the ticket has at least a certain
 		# amount of time left. if not, it could expire mid execution!
 		# this should definitely get patched, but in the meantime, we
 		# check that the current time is greater than the valid start
 		# time (in seconds) and that we have within $tl seconds left!
-		unless => "/usr/bin/klist -s && /usr/bin/test \$(( `/bin/date +%s` - `/usr/bin/klist | /bin/grep -F '${rr}' | /bin/awk '{print \$1\" \"\$2}' | /bin/date --file=- +%s` )) -gt 0 && /usr/bin/test \$(( `/usr/bin/klist | /bin/grep -F '${rr}' | /bin/awk '{print \$3\" \"\$4}' | /bin/date --file=- +%s` - `/bin/date +%s` )) -gt ${tl}",
-		require => [
+    unless    => "/usr/bin/klist -s && /usr/bin/test \$(( `/bin/date +%s` - `/usr/bin/klist | /bin/grep -F '${rr}' | /bin/awk '{print \$1\" \"\$2}' | /bin/date --file=- +%s` )) -gt 0 && /usr/bin/test \$(( `/usr/bin/klist | /bin/grep -F '${rr}' | /bin/awk '{print \$3\" \"\$4}' | /bin/date --file=- +%s` - `/bin/date +%s` )) -gt ${tl}",
+    require   => [
 			Package['ipa-client'],
 			Exec['ipa-install'],
 			Ipa::Client::Host["${valid_host}"],
 		],
-		alias => "ipa-client-service-kinit-${name}",
 	}
 
 	$args01 = "--server='${valid_server}'"	# contact this KDC server (ipa)
@@ -167,19 +167,19 @@ define ipa::client::service(
 	$args = join(delete($arglist, ''), ' ')
 
 	$kvno_bool = "/usr/bin/kvno -q '${valid_principal}'"
-	exec { "/usr/sbin/ipa-getkeytab ${args}":
-		logoutput => on_failure,
+	exec { "ipa-getkeytab-${name}":
+    command   => "/usr/sbin/ipa-getkeytab ${args}",
+    logoutput => on_failure,
 			# check that the KDC has a valid ticket available there
 			# check that the ticket version no. matches our keytab!
-		unless => "${kvno_bool} && /usr/bin/klist -k -t '${valid_keytab}' | /bin/awk '{print \$4\": kvno = \"\$1}' | /bin/sort | /usr/bin/uniq | /bin/grep -F '${valid_principal}' | /bin/grep -qxF \"`/usr/bin/kvno '${valid_principal}'`\"",
-		require => [
+    unless    => "${kvno_bool} && /usr/bin/klist -k -t '${valid_keytab}' | /bin/awk '{print \$4\": kvno = \"\$1}' | /bin/sort | /usr/bin/uniq | /bin/grep -F '${valid_principal}' | /bin/grep -qxF \"`/usr/bin/kvno '${valid_principal}'`\"",
+    require   => [
 			# these deps are done in the kinit
 			#Package['ipa-client'],
 			#Exec['ipa-install'],
 			#Ipa::Client::Host["${valid_host}"],
 			Exec["ipa-client-service-kinit-${name}"],
 		],
-		#alias => "ipa-getkeytab-${name}",
 	}
 }
 

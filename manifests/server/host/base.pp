@@ -80,14 +80,14 @@ class ipa::server::host::base {
 	}
 
 	# run the cleanup
-	exec { "${vardir}/clean-hosts.sh":
-		logoutput => on_failure,
-		refreshonly => true,
-		require => [
+	exec { 'ipa-clean-hosts':
+    command     => "${vardir}/clean-hosts.sh",
+    logoutput   => on_failure,
+    refreshonly => true,
+    require     => [
 			Exec['ipa-server-kinit'],
 			File["${vardir}/clean-hosts.sh"],
 		],
-		alias => 'ipa-clean-hosts',
 	}
 
 	# NOTE: it doesn't cause a problem that this dir is inside the hosts dir

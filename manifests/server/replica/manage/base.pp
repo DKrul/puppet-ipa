@@ -83,14 +83,14 @@ class ipa::server::replica::manage::base {
 	}
 
 	# run the cleanup
-	exec { "${vardir}/clean-peers.sh":
-		logoutput => on_failure,
-		refreshonly => true,
-		require => [
+	exec { 'ipa-clean-peers':
+    command     => "${vardir}/clean-peers.sh",
+    logoutput   => on_failure,
+    refreshonly => true,
+    require     => [
 			Exec['ipa-server-kinit'],
 			File["${vardir}/clean-peers.sh"],
 		],
-		alias => 'ipa-clean-peers',
 	}
 }
 

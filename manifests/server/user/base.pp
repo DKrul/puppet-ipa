@@ -76,13 +76,13 @@ class ipa::server::user::base {
 
 	# run the cleanup
 	exec { "${vardir}/clean-users.sh":
-		logoutput => on_failure,
-		refreshonly => true,
-		require => [
+    command     => "${vardir}/clean-users.sh",
+    logoutput   => on_failure,
+    refreshonly => true,
+    require     => [
 			Exec['ipa-server-kinit'],
 			File["${vardir}/clean-users.sh"],
 		],
-		alias => 'ipa-clean-users',
 	}
 
 	file { "${vardir}/users/passwords/":	# for storing random passwords
