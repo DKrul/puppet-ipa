@@ -5,6 +5,7 @@ define ipa::sudorule(
   $usergroups = [],
   $hostgroups = [],
   $cmdgroups = [],
+  $runasusers = [],
 ) {
   ipa_sudorule { $name:
     ensure      => $ensure,
@@ -36,6 +37,13 @@ define ipa::sudorule(
       ensure   => $value['ensure'],
       sudorule => $name,
       cmdgroup => $cmdgroup,
+    }
+  }
+  $runasusers.each | String $runasuser, Hash $value | {
+    ipa_sudorulerunasuser { "${name}_${runasuser}":
+      ensure    => $value['ensure'],
+      sudorule  => $name,
+      runasuser => $runasuser,
     }
   }
 }
