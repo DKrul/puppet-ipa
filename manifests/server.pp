@@ -76,6 +76,7 @@ class ipa::server(
   $usergroups = undef,
   $hostgroups = undef,
   $dnszones = undef,
+  $dnsforwardzones = undef,
   $dnsrecords = undef,
   $sudorules = undef,
   $sudocmdgroups = undef,
@@ -769,6 +770,9 @@ class ipa::server(
     }
     if $dnszones != undef {
       create_resources('::ipa::server::dnszone', $dnszones)
+    }
+    if $dnsforwardzones != undef {
+      create_resources('::ipa::server::dnsforwardzone', $dnsforwardzones)
     }
     if $dnsrecords != undef {
       create_resources('::ipa::server::dnsrecord', $dnsrecords)
