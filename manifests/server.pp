@@ -77,6 +77,7 @@ class ipa::server(
   $dnszones = undef,
   $dnsrecords = undef,
   $sudorules = undef,
+  $sudocmdgroups = undef,
 ) {
 	$fw = '$FW'			# make using $FW in shorewall easier...
 
@@ -770,6 +771,9 @@ class ipa::server(
     }
     if $sudorules != undef {
       create_resources('::ipa::sudorule', $sudorules)
+    }
+    if $sudocmdgroups != undef {
+      create_resources('::ipa::sudocmdgroup', $sudocmdgroups)
     }
   }
 }

@@ -23,7 +23,7 @@ define ipa::sudorule(
       usergroup => $usergroup,
     }
   }
-	$hostgroups.each | String $hostgroup, Hash $value | {
+  $hostgroups.each | String $hostgroup, Hash $value | {
     ipa_sudorulehostgroup { "${name}_${hostgroup}":
       ensure    => $value['ensure'],
       sudorule  => $name,
