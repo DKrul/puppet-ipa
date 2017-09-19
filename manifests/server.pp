@@ -759,25 +759,25 @@ class ipa::server(
   else
   {
     if $usergroups != undef {
-      create_resources('::ipa::usergroup', $usergroups)
+      create_resources('::ipa::server::usergroup', $usergroups)
     }
     if $users != undef {
-      create_resources('::ipa::user', $users)
+      create_resources('::ipa::server::user', $users)
     }
     if $hostgroups != undef {
-      create_resources('::ipa::hostgroup', $hostgroups)
+      create_resources('::ipa::server::hostgroup', $hostgroups)
     }
     if $dnszones != undef {
-      create_resources('::ipa::dnszone', $dnszones)
+      create_resources('::ipa::server::dnszone', $dnszones)
     }
     if $dnsrecords != undef {
-      create_resources('::ipa::dnsrecord', $dnsrecords)
+      create_resources('::ipa::server::dnsrecord', $dnsrecords)
     }
     if $sudocmdgroups != undef {
-      create_resources('::ipa::sudocmdgroup', $sudocmdgroups)
+      create_resources('::ipa::server::sudocmdgroup', $sudocmdgroups)
     }
     if $sudorules != undef {
-      create_resources('::ipa::sudorule', $sudorules)
+      create_resources('::ipa::server::sudorule', $sudorules)
     }
   }
 }

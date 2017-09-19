@@ -1,4 +1,4 @@
-define ipa::dnszone(
+define ipa::server::dnszone(
   $ensure = present,
   $ttl = 3600,
 ) {

@@ -1,4 +1,4 @@
-define ipa::hostgroup(
+define ipa::server::hostgroup(
   $ensure = present,
   $description = $name,
   $members = [],

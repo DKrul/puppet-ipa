@@ -1,4 +1,4 @@
-define ipa::usergroup(
+define ipa::server::usergroup(
   $ensure = present,
   $description = '',
 ) {

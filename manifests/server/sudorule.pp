@@ -1,4 +1,4 @@
-define ipa::sudorule(
+define ipa::server::sudorule(
   $ensure = present,
   $description = '',
   $options = [],

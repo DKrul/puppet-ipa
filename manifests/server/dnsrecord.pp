@@ -1,4 +1,4 @@
-define ipa::dnsrecord(
+define ipa::server::dnsrecord(
   $ensure = present,
   $ipaddress = 3600,
   $create_reverse = true,

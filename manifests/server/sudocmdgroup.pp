@@ -1,4 +1,4 @@
-define ipa::sudocmdgroup(
+define ipa::server::sudocmdgroup(
   $ensure = present,
   $description = $name,
   $commands = {},
