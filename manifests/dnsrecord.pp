@@ -3,7 +3,7 @@ define ipa::dnsrecord(
   $ipaddress = 3600,
   $create_reverse = true,
 ) {
-  $components = split($name, "\.")
+  $components = split($name, '\.')
 
   ipa_dnsrecord { $name:
     ensure         => $ensure,
