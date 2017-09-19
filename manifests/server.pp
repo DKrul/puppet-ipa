@@ -135,7 +135,7 @@ class ipa::server(
 		},
 	}
 
-	notice(inline_template('valid_peers: <%= @valid_peers.inspect %>'))
+#	notice(inline_template('valid_peers: <%= @valid_peers.inspect %>'))
 
 	# export the required firewalls...
 	if $shorewall {
