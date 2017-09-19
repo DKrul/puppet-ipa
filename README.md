@@ -1,6 +1,26 @@
 # *puppet-ipa*: a puppet module for FreeIPA
 
-[![Build Status](https://secure.travis-ci.org/purpleidea/puppet-ipa.png)](http://travis-ci.org/purpleidea/puppet-ipa)
+---
+**This repo is a fork of purpleidea, but a lot has changed is this repo. So some of the functionality may not work with this module**
+Stuff that hass been added to this module:
+- Management of users has been moved to custom types/provider
+- Management of DNS zones
+- Management of DNS records
+- Management of DNS forward zones
+- Management of Hostgroups
+- Management of Usergroups
+- Management of sudo command groups
+- Management of sudorules
+  - usergroups
+  - hostgroups
+  - command groups
+  - runasusers
+  - options
+
+Documentation about these additions also needs to be added.
+
+---
+
 
 ## Documentation:
 Please see: [DOCUMENTATION.md](DOCUMENTATION.md) or [PDF](https://pdfdoc-purpleidea.rhcloud.com/pdf/https://github.com/purpleidea/puppet-ipa/blob/master/DOCUMENTATION.md).
