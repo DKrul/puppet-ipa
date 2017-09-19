@@ -1,7 +1,7 @@
 # *puppet-ipa*: a puppet module for FreeIPA
 
 ---
-**This repo is a fork of purpleidea, but a lot has changed is this repo. So some of the functionality may not work with this module**
+**This repo is a fork of purpleidea, but a lot has changed is this repo. If you are using the module of purpleidea, this module may not be an in place replacement**
 
 Stuff that hass been added to this module:
 - Management of users has been moved to custom types/provider
