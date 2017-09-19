@@ -38,13 +38,7 @@ class ipa::params(
 	# misc...
 	#$misc_ = '',	# TODO
 
-	# comment...
-	$comment = ''
 ) {
-	if "${comment}" == '' {
-		warning('Unable to load yaml data/ directory!')
-	}
-
 	$valid_include_puppet_facter = $include_puppet_facter ? {
 		true => true,
 		false => false,
