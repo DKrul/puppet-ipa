@@ -80,6 +80,7 @@ class ipa::server(
   $dnsrecords = undef,
   $sudorules = undef,
   $sudocmdgroups = undef,
+  $hbacrules = undef,
 ) {
 	$fw = '$FW'			# make using $FW in shorewall easier...
 
@@ -782,6 +783,9 @@ class ipa::server(
     }
     if $sudorules != undef {
       create_resources('::ipa::server::sudorule', $sudorules)
+    }
+    if $hbacrules != undef {
+      create_resources('::ipa::server::hbacrule', $hbacrules)
     }
   }
 }
