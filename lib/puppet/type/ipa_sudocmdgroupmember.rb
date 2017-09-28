@@ -1,5 +1,5 @@
-Puppet::Type.newtype(:ipa_hostgroupmember) do
-  desc "Manage IPA Host Group member records"
+Puppet::Type.newtype(:ipa_sudocmdgroupmember) do
+  desc "Manage IPA CMD Group member records"
 
   ensurable do
     newvalue(:present) do
@@ -16,18 +16,12 @@ Puppet::Type.newtype(:ipa_hostgroupmember) do
     isnamevar
   end
 
-  newparam(:member) do
-    desc "Member to add to a hostgroup"
+  newparam(:command) do
+    desc "Member to add to a group"
   end
 
   newparam(:groupname) do
     desc "The group name to which the members will be added"
-  end
-
-  newparam(:type) do
-    desc "Is member a host or a hostgroup? Defaults to host"
-    newvalues(:host, :group)
-    defaultto 'host'
   end
 
 end

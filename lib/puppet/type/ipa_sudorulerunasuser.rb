@@ -1,5 +1,5 @@
-Puppet::Type.newtype(:ipa_sudoruleoption) do
-  desc "Manage IPA SUDOrule options"
+Puppet::Type.newtype(:ipa_sudorulerunasuser) do
+  desc "Manage IPA SUDOrule runasusers"
 
   ensurable do
     newvalue(:present) do
@@ -16,12 +16,12 @@ Puppet::Type.newtype(:ipa_sudoruleoption) do
     isnamevar
   end
 
-  newparam(:option) do
-    desc "The option to add to the SUDOrule"
+  newparam(:runasuser) do
+    desc "The runasuser to add to the SUDOrule"
   end
 
   newparam(:sudorule) do
-    desc "The SUDOrule to add the option to"
+    desc "The SUDOrule to add the runasuser to"
     defaultto ''
   end
 

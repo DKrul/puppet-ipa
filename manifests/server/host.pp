@@ -256,7 +256,7 @@ define ipa::server::host(
 	}
 	# NOTE: this runs when no host is present...
 	#exec { "/usr/bin/ipa host-add '${valid_fqdn}' ${fargs}":
-	exec { "ipa-server-host-add-${name}":	# alias
+	exec { "ipa-server-host-add-${name}":
 		# this has to be here because the command string gets too long
 		# for a puppet $name var and strange things start to happen...
 		command => "/usr/bin/ipa host-add '${valid_fqdn}' ${fargs}",
@@ -273,7 +273,6 @@ define ipa::server::host(
 				File["${vardir}/hosts/sshpubkeys/${name}/"],
 			],
 		},
-		#alias => "ipa-server-host-add-${name}",
 	}
 
 	# NOTE: this runs when we detect that the attributes don't match (diff)
@@ -305,7 +304,6 @@ define ipa::server::host(
 				Exec["ipa-server-host-add-${name}"],
 				File["${vardir}/hosts/sshpubkeys/${name}/"],
 			],
-			#alias => "ipa-server-host-mod-${name}",
 		}
 	}
 
@@ -365,16 +363,16 @@ define ipa::server::host(
 			true => " --raw | /usr/bin/tr -d ' ' | /bin/grep '^randompassword:' | /bin/cut -b 16- > ${vardir}/hosts/passwords/${valid_fqdn}.password",
 			default => '',
 		}
-		exec { "/usr/bin/ipa host-mod '${valid_fqdn}' ${qargs}${qextra}":
-			logoutput => on_failure,
-			refreshonly => true,	# needed because we can't "see"
-			subscribe => File["${vardir}/hosts/${valid_fqdn}.qhost"],
-			onlyif => "${exists}",
-			require => [
+		exec { "ipa-server-host-qmod-${name}":
+      command     => "/usr/bin/ipa host-mod '${valid_fqdn}' ${qargs}${qextra}",
+      logoutput   => on_failure,
+      refreshonly => true,	# needed because we can't "see"
+      subscribe   => File["${vardir}/hosts/${valid_fqdn}.qhost"],
+      onlyif      => "${exists}",
+      require     => [
 				Exec['ipa-server-kinit'],
 				Exec["ipa-server-host-add-${name}"],
 			],
-			alias => "ipa-server-host-qmod-${name}",
 		}
 	}
 

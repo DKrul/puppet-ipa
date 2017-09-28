@@ -1,5 +1,5 @@
-Puppet::Type.newtype(:ipa_sudoruleoption) do
-  desc "Manage IPA SUDOrule options"
+Puppet::Type.newtype(:ipa_sudorulecmdgroup) do
+  desc "Manage IPA SUDOrule cmdgroups"
 
   ensurable do
     newvalue(:present) do
@@ -16,12 +16,12 @@ Puppet::Type.newtype(:ipa_sudoruleoption) do
     isnamevar
   end
 
-  newparam(:option) do
-    desc "The option to add to the SUDOrule"
+  newparam(:cmdgroup) do
+    desc "The cmdgroup to add to the SUDOrule"
   end
 
   newparam(:sudorule) do
-    desc "The SUDOrule to add the option to"
+    desc "The SUDOrule to add the cmdgroup to"
     defaultto ''
   end
 

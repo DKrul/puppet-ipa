@@ -70,7 +70,17 @@ class ipa::server(
 	$service_excludes = [],		# never purge these service excludes...
 	$user_excludes = [],		# never purge these user excludes...
 	$peer_excludes = [],		# never purge these peer excludes...
-	$ensure = present		# TODO: support uninstall with 'absent'
+	$ensure = present,		# TODO: support uninstall with 'absent',
+  $version = $::ipa::params::package_ipa_version,
+  $users = undef,
+  $usergroups = undef,
+  $hostgroups = undef,
+  $dnszones = undef,
+  $dnsforwardzones = undef,
+  $dnsrecords = undef,
+  $sudorules = undef,
+  $sudocmdgroups = undef,
+  $hbacrules = undef,
 ) {
 	$fw = '$FW'			# make using $FW in shorewall easier...
 
@@ -127,7 +137,7 @@ class ipa::server(
 		},
 	}
 
-	notice(inline_template('valid_peers: <%= @valid_peers.inspect %>'))
+#	notice(inline_template('valid_peers: <%= @valid_peers.inspect %>'))
 
 	# export the required firewalls...
 	if $shorewall {
@@ -199,7 +209,7 @@ class ipa::server(
 
 	if $dns {
 		package { $::ipa::params::package_bind:
-			ensure => present,
+			ensure => $version,
 			before => Package["${::ipa::params::package_ipa_server}"],
 		}
 	}
@@ -221,7 +231,7 @@ class ipa::server(
 	}
 
 	package { "${::ipa::params::package_ipa_server}":
-		ensure => present,
+		ensure => $version,
 	}
 
 	file { "${vardir}/diff.py":		# used by a few child classes
@@ -353,12 +363,12 @@ class ipa::server(
 		# check if key is already imported
 		$gpg_unless = "${gpg_cmd} --with-colons --fast-list-mode --list-public-keys '${gpg_recipient}'"
 
-		exec { "${gpg_cmd} ${gpg_import}":
-			logoutput => on_failure,
-			unless => $gpg_unless,
-			before => Exec['ipa-install'],
-			require => File["${vardir}/gpg/"],
-			alias => 'ipa-gpg-import',
+		exec { 'ipa-gpg-import':
+      command   => "${gpg_cmd} ${gpg_import}",
+      logoutput => on_failure,
+      unless    => $gpg_unless,
+      before    => Exec['ipa-install'],
+      require   => File["${vardir}/gpg/"],
 		}
 
 		# TODO: add checks
@@ -369,12 +379,12 @@ class ipa::server(
 			# if we email out the encrypted password, make sure its
 			# public key has the correct email address to match it!
 			$gpg_check_email = "${gpg_cmd} --with-colons --list-public-keys '${gpg_recipient}' | /bin/awk -F ':' '\$1 = /uid/ {print \$10}' | /bin/grep -qF '<${valid_email}>'"
-			exec { "${gpg_check_email}":
-				logoutput => on_failure,
-				unless => $gpg_unless,
-				before => Exec['ipa-install'],
-				require => Exec['ipa-gpg-import'],
-				alias => 'ipa-gpg-check',
+			exec { 'ipa-gpg-check':
+        command   => "${gpg_check_email}",
+        logoutput => on_failure,
+        unless    => $gpg_unless,
+        before    => Exec['ipa-install'],
+        require   => Exec['ipa-gpg-import'],
 			}
 		}
 	}
@@ -547,15 +557,15 @@ class ipa::server(
 
 	if ("${valid_vip}" == '' or "${vipif}" != '') {
 
-		exec { "${vardir}/ipa-server-install.sh":
-			logoutput => on_failure,
-			unless => "${::ipa::common::ipa_installed}",	# can't install if installed...
-			timeout => 3600,	# hope it doesn't take more than 1 hour
-			require => [
+		exec { 'ipa-install':
+      command   => "${vardir}/ipa-server-install.sh",
+      logoutput => on_failure,
+      unless    => "${::ipa::common::ipa_installed}",	# can't install if installed...
+      timeout   => 3600,	# hope it doesn't take more than 1 hour
+      require   => [
 				Package["${::ipa::params::package_ipa_server}"],
 				File["${vardir}/ipa-server-install.sh"],
 			],
-			alias => 'ipa-install',	# same alias as client to prevent both!
 		}
 
 		# NOTE: this is useful to collect only on hosts that are installed or
@@ -579,32 +589,32 @@ class ipa::server(
 	}
 
 	# this file is a tag that lets you know which server was the first one!
-	file { "${vardir}/ipa_server_replica_master":
-		owner => root,
-		group => nobody,
-		mode => '600',	# u=rw,go=
-		backup => false,
-		require => [
+	file { 'ipa-server-master-flag':
+    path    => "${vardir}/ipa_server_replica_master",
+    owner   => root,
+    group   => nobody,
+    mode    => '600',	# u=rw,go=
+    backup  => false,
+    require => [
 			File["${vardir}/"],
 			Exec['ipa-install'],
 		],
-		ensure => present,
-		alias => 'ipa-server-master-flag',
+    ensure  => present,
 	}
 
 	# this file is a tag that lets notify know it only needs to run once...
-	file { "${vardir}/ipa_server_installed":
-		#content => "true\n",
-		owner => root,
-		group => nobody,
-		mode => '600',	# u=rw,go=
-		backup => false,
-		require => [
+	file { 'ipa-server-installed-flag':
+    path     => "${vardir}/ipa_server_installed",
+    #content => "true\n",
+    owner    => root,
+    group    => nobody,
+    mode     => '600',	# u=rw,go=
+    backup   => false,
+    require  => [
 			File["${vardir}/"],
 			Exec['ipa-install'],
 		],
-		ensure => present,
-		alias => 'ipa-server-installed-flag',
+    ensure   => present,
 	}
 
 	# this sets the true value so that we know that ipa is installed first!
@@ -620,12 +630,12 @@ class ipa::server(
 	# then the host resource won't use --force and we'll get errors... this
 	# happens because of bug#: https://fedorahosted.org/freeipa/ticket/3726
 	if ! $dns {
-		exec { '/bin/false':	# fail so that we know about the change
-			logoutput => on_failure,
+		exec { 'ipa-dns-check':
+      command   => '/bin/false', # fail so that we know about the change
+      logoutput => on_failure,
 			# thanks to 'ab' in #freeipa for help with the ipa api!
-			onlyif => "/usr/bin/python -c 'import sys,ipalib;ipalib.api.bootstrap_with_global_options(context=\"puppet\");ipalib.api.finalize();(ipalib.api.Backend.ldap2.connect(ccache=ipalib.api.Backend.krb.default_ccname()) if ipalib.api.env.in_server else ipalib.api.Backend.xmlclient.connect());sys.exit(0 if ipalib.api.Command.dns_is_enabled().get(\"result\") else 1)'",
-			require => Package["${::ipa::params::package_ipa_server}"],
-			alias => 'ipa-dns-check',
+      onlyif    => "/usr/bin/python -c 'import sys,ipalib;ipalib.api.bootstrap_with_global_options(context=\"puppet\");ipalib.api.finalize();(ipalib.api.Backend.ldap2.connect(ccache=ipalib.api.Backend.krb.default_ccname()) if ipalib.api.env.in_server else ipalib.api.Backend.xmlclient.connect());sys.exit(0 if ipalib.api.Command.dns_is_enabled().get(\"result\") else 1)'",
+      require   => Package["${::ipa::params::package_ipa_server}"],
 		}
 	}
 
@@ -748,6 +758,36 @@ class ipa::server(
 			}
 		}
 	}
+  else
+  {
+    if $usergroups != undef {
+      create_resources('::ipa::server::usergroup', $usergroups)
+    }
+    if $users != undef {
+      create_resources('::ipa::server::user', $users)
+    }
+    if $hostgroups != undef {
+      create_resources('::ipa::server::hostgroup', $hostgroups)
+    }
+    if $dnszones != undef {
+      create_resources('::ipa::server::dnszone', $dnszones)
+    }
+    if $dnsforwardzones != undef {
+      create_resources('::ipa::server::dnsforwardzone', $dnsforwardzones)
+    }
+    if $dnsrecords != undef {
+      create_resources('::ipa::server::dnsrecord', $dnsrecords)
+    }
+    if $sudocmdgroups != undef {
+      create_resources('::ipa::server::sudocmdgroup', $sudocmdgroups)
+    }
+    if $sudorules != undef {
+      create_resources('::ipa::server::sudorule', $sudorules)
+    }
+    if $hbacrules != undef {
+      create_resources('::ipa::server::hbacrule', $hbacrules)
+    }
+  }
 }
 
 # vim: ts=8

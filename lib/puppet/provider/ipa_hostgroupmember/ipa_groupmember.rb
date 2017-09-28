@@ -4,25 +4,25 @@ Puppet::Type.type(:ipa_hostgroupmember).provide :ipa_groupmember do
   commands :ipa => "/bin/ipa"
 
   def create
-    debug 'Adding member %s to hostgroup %s' % [resource[:name], resource[:groupname]]
+    debug 'Adding member %s to hostgroup %s' % [resource[:member], resource[:groupname]]
     case resource[:type]
       when :host
         param = '--hosts'
       when :group
         param = '--hostgroups'
     end
-    ipa "hostgroup-add-member", resource[:groupname], param, resource[:name]
+    ipa "hostgroup-add-member", resource[:groupname], param, resource[:member]
   end
 
   def destroy
-    debug 'Removing member %s from hostgroup %s' % [resource[:name], resource[:groupname]]
+    debug 'Removing member %s from hostgroup %s' % [resource[:member], resource[:groupname]]
     case resource[:type]
       when :host
         param = '--hosts'
       when :group
         param = '--hostgroups'
     end
-    ipa "hostgroup-remove-member", resource[:groupname], param, resource[:name]
+    ipa "hostgroup-remove-member", resource[:groupname], param, resource[:member]
   end
 
   def exists?
@@ -39,7 +39,7 @@ Puppet::Type.type(:ipa_hostgroupmember).provide :ipa_groupmember do
         param = 'Member host-groups'
     end
     if result[param]
-      if result[param].include? resource[:name]
+      if result[param].include? resource[:member]
         return true
       else
         @update = true

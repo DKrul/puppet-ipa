@@ -169,7 +169,7 @@ define ipa::server::service(
 		default => "${args}",		# force everything
 	}
 	# NOTE: this runs when no service is present...
-	exec { "ipa-server-service-add-${name}":	# alias
+	exec { "ipa-server-service-add-${name}":
 		# this has to be here because the command string gets too long
 		# for a puppet $name var and strange things start to happen...
 		command => "/usr/bin/ipa service-add '${valid_principal}' ${fargs}",
@@ -210,7 +210,6 @@ define ipa::server::service(
 				Exec['ipa-server-kinit'],
 				Exec["ipa-server-service-add-${name}"],
 			],
-			#alias => "ipa-server-service-mod-${name}",
 		}
 	}
 

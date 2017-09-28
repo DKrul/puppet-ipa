@@ -1,5 +1,5 @@
-Puppet::Type.newtype(:ipa_sudoruleoption) do
-  desc "Manage IPA SUDOrule options"
+Puppet::Type.newtype(:ipa_hbacrulehostgroup) do
+  desc "Manage IPA HBACrule hostgroups"
 
   ensurable do
     newvalue(:present) do
@@ -16,12 +16,12 @@ Puppet::Type.newtype(:ipa_sudoruleoption) do
     isnamevar
   end
 
-  newparam(:option) do
-    desc "The option to add to the SUDOrule"
+  newparam(:hostgroup) do
+    desc "The hostgroup to add to the HBACrule"
   end
 
-  newparam(:sudorule) do
-    desc "The SUDOrule to add the option to"
+  newparam(:hbacrule) do
+    desc "The HBACrule to add the hostgroup to"
     defaultto ''
   end
 

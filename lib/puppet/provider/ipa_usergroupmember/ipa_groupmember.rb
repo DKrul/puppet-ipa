@@ -4,7 +4,7 @@ Puppet::Type.type(:ipa_usergroupmember).provide :ipa_groupmember do
   commands :ipa => "/bin/ipa"
 
   def create
-    debug 'Adding member %s to group %s' % [resource[:name], resource[:groupname]]
+    debug 'Adding member %s to group %s' % [resource[:member], resource[:groupname]]
     case resource[:type]
       when :user
         param = '--users'
@@ -13,11 +13,11 @@ Puppet::Type.type(:ipa_usergroupmember).provide :ipa_groupmember do
       when :external
         param = '--external'
     end
-    ipa "group-add-member", resource[:groupname], param, resource[:name]
+    ipa "group-add-member", resource[:groupname], param, resource[:member]
   end
 
   def destroy
-    debug 'Removing member %s from group %s' % [resource[:name], resource[:groupname]]
+    debug 'Removing member %s from group %s' % [resource[:member], resource[:groupname]]
     case resource[:type]
       when :user
         param = '--users'
@@ -26,7 +26,7 @@ Puppet::Type.type(:ipa_usergroupmember).provide :ipa_groupmember do
       when :external
         param = '--external'
     end
-    ipa "group-remove-member", resource[:groupname], param, resource[:name]
+    ipa "group-remove-member", resource[:groupname], param, resource[:member]
   end
 
   def exists?
@@ -45,7 +45,7 @@ Puppet::Type.type(:ipa_usergroupmember).provide :ipa_groupmember do
         param = 'External member'
     end
     if result[param]
-      if result[param].include? resource[:name]
+      if result[param].include? resource[:member]
         return true
       else
         @update = true
